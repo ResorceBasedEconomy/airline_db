@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-      airline
+    getPlane <input type="text" v-model="planeId" @keyup="submited" />
 
   </div>
 </template>
@@ -8,10 +8,25 @@
 <script>
 
 
-export default {
+  export default {
+    data() {
+      return {
+        planeId: '',
+        plane: null
+      }
+    },
+    methods: {
+      submited() {
+        this.$http.get(`http://localhost:80/airline/server/api/planeAPI.php?id=${this.planeId}`)
+        .then(res => res.json()
+        .then(plane => {
+          this.plane = Object.values(plane);
+          console.log('this.plane', this.plane);
+        }));
+      }
+    }
 
-  
-}
+  }
 </script>
 
 <style>

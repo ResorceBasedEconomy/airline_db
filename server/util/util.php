@@ -21,7 +21,7 @@ function dbConnect() {
     $servername = "localhost";
     $username = "root";
     $password = "";
-    $dbname = 'airline_db';
+    $dbname = 'airline_db2';
 
     // Create connection
     $conn = new mysqli($servername, $username, $password, $dbname);
