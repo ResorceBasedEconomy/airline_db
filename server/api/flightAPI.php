@@ -2,20 +2,20 @@
 header("Access-Control-Allow-Origin: *");
 
 require_once '../util/util.php';
-require_once '../model/plane.php';
+require_once '../model/flight.php';
 
 dbConnect();
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-     
-     $srcToGet = (int) r('src');
+     die('aaaaaaaaaaaaa');
+     $originToGet = (int) r('origin');
 
-     if ($srcToGet) {
-        $plane = getPlaneById($srcToGet);
-        echo json_encode($plane);
+     if ($originToGet) {
+        $flight = getFlightBySrc($originToGet);
+        echo json_encode($flight);
      } else {
-        $planes = getPlanes();
-        echo json_encode($planes);
+        $flights = getFlights();
+        echo json_encode($flights);
      }
 
 } else if ($_SERVER['REQUEST_METHOD'] === 'PUT') {

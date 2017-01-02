@@ -1,7 +1,11 @@
 <template>
   <div id="app">
-    getPlane <input type="text" v-model="planeId" @keyup="submited" />
-
+    from <input type="text" v-model="textFrom" @keyup="submited" />
+     <ul class="flex">
+      <li v-for="flight in flights">
+        {{flight.origin}}
+      </li>
+    </ul>
   </div>
 </template>
 
@@ -11,17 +15,22 @@
   export default {
     data() {
       return {
-        planeId: '',
-        plane: null
+        textFrom: '',
+        flights: []
       }
     },
     methods: {
       submited() {
-        this.$http.get(`http://localhost:80/airline/server/api/planeAPI.php?id=${this.planeId}`)
+        this.$http.get(`http://localhost:80/airline/server/api/flightAPI.php?origin="${this.textFrom.toUpperCase()}"`)
         .then(res => res.json()
-        .then(plane => {
-          this.plane = Object.values(plane);
-          console.log('this.plane', this.plane);
+        .then(flight => {
+          this.flights = Object.values(flight);
+          console.log('this.flights', this.flights);
+        // this.$http.get(`airline/server/api/planeAPI.php?id=${this.planeId}`)
+        // .then(res => res.json()
+        // .then(plane => {
+        //   this.plane = Object.values(plane);
+        //   console.log('this.plane', this.plane);
         }));
       }
     }
@@ -37,5 +46,10 @@
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+.flex{
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
 }
 </style>

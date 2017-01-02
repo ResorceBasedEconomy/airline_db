@@ -17,6 +17,7 @@ function r($name) {
 $conn = null;
 function dbConnect() {
     global $conn;
+     die('aaaaaaaaaaaaa');
 
     $servername = "localhost";
     $username = "root";
