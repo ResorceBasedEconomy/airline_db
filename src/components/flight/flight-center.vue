@@ -1,39 +1,25 @@
 <template>
   <div class="box">
-    <input @keyup="getFlights" v-model="textFrom" placeholder="From*" type="text" />
-    <!--<input @keyup="getFlights" v-model="textFrom" placeholder="To*" type="text" />-->
+    <input @keyup="getFlights('origin',$event.target.value)" v-model="search.origin" placeholder="Origin Airport*" type="text" class="input" />
+    <input @keyup="getFlights()" v-model="search.dest" placeholder="Destenation*" type="text" class="input"/>
 
-   
+   <h2>Matching Flights</h2>
     <table class="table">
       <thead>
         <tr>
           <th>ID</th>
           <th>Origin airport</th>
           <th>Destenation</th>
+          <th>Departue time</th>
           <th>Plane ID</th>
           <th colspan="4">Options</th>
         </tr>
       </thead>
-      <tbody>  
-        <tr  v-for="flight in flights">
-          <td>{{flight.id}}</td>
-          <td>{{flight.origin}}</td>
-          <td>{{flight.dest}}</td>
-          <td>{{flight.plane_id}}</td>
-          
-          <td>
-           <button :data-id="flight.id" class="button"  @click="bookFlight($event)">Book</button>
-          </td>
-          <td>
-            <button  class="button is-warning">Edit</button>
-          </td>
-          <td>
-           <button  class="button is-info">Save</button>
-          </td>
-          <td>
-           <button  class="button is-danger">X</button>
-          </td>
-        </tr>
+      <tbody  v-for="flight in flights">  
+        <flight-preview :flight="flight"
+                        @deleteFlight="doDelete"
+                        @updateFlight="doUpdate">
+          </flight-preview>
       </tbody>
     </table>
 
@@ -41,43 +27,43 @@
 </template>
 
 <script>
-  // import FlightPreview from './flight-preview.vue'
+  import FlightPreview from './flight-preview.vue'
+
+
   export default {
     data() {
       return {
         textFrom: '',
+        search: {origin: '', dest: ''},
+        msg: '',
         flights: []
       }
     },
     methods: {
       getFlights() {
-        this.$http.get(`http://localhost:80/airline/server/api/flightAPI.php?origin="${this.textFrom.toUpperCase()}"`)
+        this.$http.get(`api/flightAPI.php?origin="${this.search.origin.toUpperCase()}"`)
           .then(res => res.json()
             .then(flight => {
-              this.flights = Object.values(flight);
+              this.flights = flight;
               console.log('this.flights', this.flights);
             }));
       },
-
-      deleteFlight($event) {
-        console.log('$event', $event);
-
-        //  this.$http.delete(`http://localhost:80/airline/server/api/flightAPI.php?id=${this.$event}`)
-        //   .then(res => res.json()
-        //   .then(flight => {
-        //     this.flights = Object.values(flight);
-        //     console.log('this.flights', this.flights);
-        // }));
+      doDelete(id) {
+        console.log('Deleting flight: ', id);
+         this.$http.delete(`api/flightAPI.php?id=${id}`)
+          .then(this.getFlights);
       },
-      bookFlight(event) {
-        let currFlightId = event.target.dataset.id;
-        
-        
+      doUpdate(flight) {
+        console.log('flight', flight);
+        this.$http.put(`api/flightAPI.php?id=${flight.id}`,flight)
+          .then(this.getFlights)
       }
-
     },
     components: {
-      // 'flight-preview': FlightPreview
+      'flight-preview': FlightPreview
+    },
+    created() {
+      this.getFlights();
     }
 
   }

@@ -6,15 +6,15 @@ import VueResource from 'vue-resource';
 import FlightCenter from './components/flight/flight-center';
 import About from './pages/about';
 import Contact from './pages/contact/contact';
-
+// import Store from './store';
 
 // Components
 import MainNav from './components/main-nav';
 
-
 Vue.use(VueResource);
 Vue.use(VueRouter);
 
+Vue.http.options.root = 'http://localhost/airline/server'
 const routes = [
       {
         path: '/',
